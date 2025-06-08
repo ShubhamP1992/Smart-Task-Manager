@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "proxy": "https://smart-task-manager-backend.vercel.app/",
+  "proxy": "",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
