@@ -6,7 +6,10 @@ export default function Login() {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const response = await fetch('/api/authentication/login', {
+
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
+        const response = await fetch(`${backendUrl}/api/authentication/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -16,12 +19,12 @@ export default function Login() {
             const data = await response.json();
             localStorage.setItem('token', data.token);
             alert('Login successful!');
-            // Redirect to dashboard
             window.location.href = '/Dashboard';
         } else {
             alert('Login failed');
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit}>
