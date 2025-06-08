@@ -1,19 +1,22 @@
-# Build stage
+# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
-# Copy solution and restore
-COPY SmartTaskManager/SmartTaskManager.sln .
-COPY SmartTaskManager/SmartTaskManager/*.csproj ./SmartTaskManager/
+# Copy everything to the container
+COPY . .
+
+# Restore dependencies
 RUN dotnet restore SmartTaskManager.sln
 
-# Copy everything else and build
-COPY SmartTaskManager/. ./SmartTaskManager/
-WORKDIR /src/SmartTaskManager
-RUN dotnet publish -c Release -o /app/publish
+# Build and publish the app
+RUN dotnet publish SmartTaskManager.csproj -c Release -o /app/publish
 
-# Runtime stage
+# Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
+
+# Copy build output from the build stage
 COPY --from=build /app/publish .
+
+# Start the app
 ENTRYPOINT ["dotnet", "SmartTaskManager.dll"]
